@@ -4,10 +4,15 @@ import com.erik5594.contato.domain.entity.Contato;
 import com.erik5594.contato.domain.entity.Pessoa;
 import com.erik5594.contato.domain.exception.contato.*;
 import com.erik5594.contato.domain.exception.pessoa.ContatoPessoaObrigatorioException;
+import com.erik5594.contato.domain.repository.ContatoRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author erik_
@@ -17,6 +22,7 @@ public class ValidaNovoContatoServiceImplTest {
 
     private ValidaContatoServiceImpl novoContato;
     private Contato contato;
+    private ContatoRepository contatoRepository;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -24,6 +30,10 @@ public class ValidaNovoContatoServiceImplTest {
     @Before
     public void before(){
         novoContato = new ValidaContatoServiceImpl();
+
+        contatoRepository = Mockito.mock(ContatoRepository.class);
+        novoContato.setRepository(contatoRepository);
+
         contato = getContato();
     }
 
@@ -147,10 +157,38 @@ public class ValidaNovoContatoServiceImplTest {
     }
 
     @Test
+    public void testeValidarTelefoneJaCadastratoParaOutro(){
+        //cenario
+        List<Contato> contatos = Arrays.asList(contato);
+        Mockito.when(contatoRepository.findByTelefoneEquals(contato.getTelefone())).thenReturn(contatos);
+
+        expectedException.expect(TelefoneContatoJaExisteException.class);
+
+        //ação
+        novoContato.validar(contato);
+    }
+
+    @Test
     public void testeValidaremailSemArroba(){
         //cenario
         contato.setEmail("testeteste.com");
+
+        Mockito.when(contatoRepository.findByTelefoneEquals(contato.getTelefone())).thenReturn(null);
+
         expectedException.expect(EmailContatoInvalidoException.class);
+
+        //ação
+        novoContato.validar(contato);
+    }
+
+    @Test
+    public void testeValidarEmailJaCadastrado(){
+        //cenario
+        List<Contato> contatos = Arrays.asList(contato);
+        Mockito.when(contatoRepository.findByTelefoneEquals(contato.getTelefone())).thenReturn(null);
+        Mockito.when(contatoRepository.findByEmailEquals(contato.getEmail())).thenReturn(contatos);
+
+        expectedException.expect(EmailContatoJaExisteException.class);
 
         //ação
         novoContato.validar(contato);

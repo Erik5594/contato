@@ -62,4 +62,8 @@ public class ValidaContatoServiceImpl implements ValidaService<Contato> {
         if (contatos != null && !contatos.isEmpty())
             throw new EmailContatoJaExisteException(String.format("Email '%s' já está cadastrado para outra pessoa.", email));
     }
+
+    public void setRepository(ContatoRepository repository) {
+        this.repository = repository;
+    }
 }

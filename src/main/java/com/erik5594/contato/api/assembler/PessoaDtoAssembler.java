@@ -65,4 +65,7 @@ public class PessoaDtoAssembler {
                 }).collect(Collectors.toList());
     }
 
+    public void setContatoDtoAssembler(ContatoDtoAssembler contatoDtoAssembler) {
+        this.contatoDtoAssembler = contatoDtoAssembler;
+    }
 }

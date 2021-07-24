@@ -3,15 +3,14 @@ package com.erik5594.contato.domain.service.impl;
 import com.erik5594.contato.domain.entity.Contato;
 import com.erik5594.contato.domain.entity.Pessoa;
 import com.erik5594.contato.domain.exception.pessoa.*;
+import com.erik5594.contato.domain.repository.PessoaRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author erik_
@@ -21,6 +20,7 @@ public class ValidaNovoPessoaServiceImpTest {
 
     private ValidaNovaPessoaServiceImpl validaNova;
     private Pessoa pessoa;
+    private PessoaRepository pessoaRepository;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -28,6 +28,10 @@ public class ValidaNovoPessoaServiceImpTest {
     @Before
     public void before(){
         validaNova = new ValidaNovaPessoaServiceImpl();
+
+        pessoaRepository = Mockito.mock(PessoaRepository.class);
+        validaNova.setPessoaRepository(pessoaRepository);
+
         pessoa = getPessoa();
     }
 
@@ -142,19 +146,25 @@ public class ValidaNovoPessoaServiceImpTest {
     }
 
     @Test
-    public void testeValidarPessoa_DataNascimentoFutura(){
+    public void testeValidarPessoa_CpfJaExiste(){
         //cenario
         pessoa.setDataNascimento(getDataFutura());
-        expectedException.expect(DataNascimentoPessoaInvalidoException.class);
+        List<Pessoa> pessoas = Arrays.asList(pessoa);
+        Mockito.when(pessoaRepository.findPessoaByCpfEquals(pessoa.getCpf())).thenReturn(pessoas);
+
+        expectedException.expect(CpfPessoaJaExisteException.class);
 
         //acao
         validaNova.validar(pessoa);
     }
 
     @Test
-    public void testeValidarPessoa_DataNascimentoAgora(){
+    public void testeValidarPessoa_DataNascimentoFutura(){
         //cenario
-        pessoa.setDataNascimento(new Date());
+        pessoa.setDataNascimento(getDataFutura());
+
+        Mockito.when(pessoaRepository.findPessoaByCpfEquals(pessoa.getCpf())).thenReturn(null);
+
         expectedException.expect(DataNascimentoPessoaInvalidoException.class);
 
         //acao

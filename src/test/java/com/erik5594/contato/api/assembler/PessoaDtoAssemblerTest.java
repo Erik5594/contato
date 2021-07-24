@@ -23,6 +23,8 @@ public class PessoaDtoAssemblerTest {
     @Before
     public void before(){
         pessoaDtoAssembler = new PessoaDtoAssembler();
+        ContatoDtoAssembler contatoDtoAssembler = new ContatoDtoAssembler();
+        pessoaDtoAssembler.setContatoDtoAssembler(contatoDtoAssembler);
     }
 
     @Test
@@ -94,7 +96,7 @@ public class PessoaDtoAssemblerTest {
 
         //verificacao
         Assert.assertEquals(pessoaDTO.id, pessoa.getId());
-        Assert.assertEquals(pessoaDTO.nome.toUpperCase(), pessoa.getNome());
+        Assert.assertEquals(pessoaDTO.nome, pessoa.getNome());
         Assert.assertEquals(pessoaDTO.cpf.replaceAll("\\D",""), pessoa.getCpf());
         Assert.assertEquals(pessoaDTO.dataNascimento, pessoa.getDataNascimento());
         Assert.assertEquals(pessoaDTO.contatos.size(), pessoa.getContatos().size());

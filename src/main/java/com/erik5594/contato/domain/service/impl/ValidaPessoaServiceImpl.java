@@ -73,4 +73,8 @@ public abstract class ValidaPessoaServiceImpl implements ValidaService<Pessoa> {
     protected void validarSeExiste(Long id) {
         pessoaRepository.findById(id);
     }
+
+    public void setPessoaRepository(PessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
+    }
 }
