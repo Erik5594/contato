@@ -15,7 +15,7 @@ import org.junit.rules.ExpectedException;
  */
 public class ValidaNovoContatoServiceImplTest {
 
-    private ValidaNovoContatoServiceImpl novoContato;
+    private ValidaContatoServiceImpl novoContato;
     private Contato contato;
 
     @Rule
@@ -23,7 +23,7 @@ public class ValidaNovoContatoServiceImplTest {
 
     @Before
     public void before(){
-        novoContato = new ValidaNovoContatoServiceImpl();
+        novoContato = new ValidaContatoServiceImpl();
         contato = getContato();
     }
 

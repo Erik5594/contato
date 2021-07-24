@@ -21,8 +21,17 @@ public class Pessoa {
     private String nome;
     private String cpf;
     private Date dataNascimento;
-    @OneToMany(mappedBy = "pessoa", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pessoa", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Contato> contatos;
+
+    public Pessoa() {
+    }
+
+    public Pessoa(String nome, String cpf, Date dataNascimento) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.dataNascimento = dataNascimento;
+    }
 
     public Long getId() {
         return id;

@@ -1,8 +1,8 @@
 package com.erik5594.contato.api.handler;
 
 import com.erik5594.contato.api.dto.DetalheErro;
-import com.erik5594.contato.domain.exception.pessoa.*;
 import com.erik5594.contato.domain.exception.contato.*;
+import com.erik5594.contato.domain.exception.pessoa.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -73,18 +73,18 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(e.getStatus()).body(new DetalheErro(e.getMensagem(), e.getStatus()));
     }
 
+    @ExceptionHandler(PessoaIdObrigatorioException.class)
+    public ResponseEntity<DetalheErro> handlePessoaIdObrigatorioException
+            (PessoaIdObrigatorioException e, HttpServletRequest request) {
+        return ResponseEntity.status(e.getStatus()).body(new DetalheErro(e.getMensagem(), e.getStatus()));
+    }
+
 
     //HANDLER EXCEPTION CONTATO
 
     @ExceptionHandler(NomeContatoObrigatorioException.class)
     public ResponseEntity<DetalheErro> handleNomeContatoObrigatorioException
             (NomeContatoObrigatorioException e, HttpServletRequest request) {
-        return ResponseEntity.status(e.getStatus()).body(new DetalheErro(e.getMensagem(), e.getStatus()));
-    }
-
-    @ExceptionHandler(NomeContatoJaExisteException.class)
-    public ResponseEntity<DetalheErro> handleNomeContatoJaExisteException
-            (NomeContatoJaExisteException e, HttpServletRequest request) {
         return ResponseEntity.status(e.getStatus()).body(new DetalheErro(e.getMensagem(), e.getStatus()));
     }
 
@@ -121,6 +121,12 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(TelefoneContatoInvalidoException.class)
     public ResponseEntity<DetalheErro> handleTelefoneContatoInvalidoException
             (TelefoneContatoInvalidoException e, HttpServletRequest request) {
+        return ResponseEntity.status(e.getStatus()).body(new DetalheErro(e.getMensagem(), e.getStatus()));
+    }
+
+    @ExceptionHandler(PessoaContatoObrigatorioException.class)
+    public ResponseEntity<DetalheErro> handlePessoaContatoInvalidoException
+            (PessoaContatoObrigatorioException e, HttpServletRequest request) {
         return ResponseEntity.status(e.getStatus()).body(new DetalheErro(e.getMensagem(), e.getStatus()));
     }
 

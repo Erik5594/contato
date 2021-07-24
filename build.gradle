@@ -22,6 +22,8 @@ dependencies {
 	//testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
 	implementation "io.springfox:springfox-boot-starter:3.0.0"
+	implementation group: 'br.com.caelum.stella', name: 'caelum-stella-core', version: '2.1.2'
+	implementation group: 'br.com.caelum.stella', name: 'caelum-stella-bean-validation', version: '2.1.2'
 }
 
 test {

@@ -1,8 +1,8 @@
 package com.erik5594.contato.domain.service;
 
 import com.erik5594.contato.domain.entity.Pessoa;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author erik_
@@ -10,7 +10,10 @@ import java.util.List;
  */
 public interface PessoaService {
 
-    List<Pessoa> listarTodasPessoas();
-    Pessoa criarPessoa(Pessoa pessoa);
+    Pessoa buscar(Long id);
+    Page<Pessoa> listarTodasPessoas(Pessoa pessoa, Pageable pageable);
+    Pessoa salvar(Pessoa pessoa);
+    void atualizar(Pessoa pessoa);
+    void deletar(Long id);
 
 }

@@ -7,21 +7,31 @@ import com.erik5594.contato.domain.repository.ContatoRepository;
 import com.erik5594.contato.domain.service.ValidaService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author erik_
  * Data Criacao: 23/07/2021 - 08:39
  */
-@Service
-public abstract class ValidaContatoServiceImpl implements ValidaService<Contato> {
+@Service @Qualifier("validaContato")
+public class ValidaContatoServiceImpl implements ValidaService<Contato> {
 
     private static final int QTDE_MIN_DIGITOS_TELEFONE = 10;
 
     @Autowired
     private ContatoRepository repository;
 
-    void validarCamposObrigatorios(Contato contato){
+    @Override
+    public void validar(Contato contato) {
+        this.validarCamposObrigatorios(contato);
+        this.validarTelefone(contato.getTelefone());
+        this.validarEmail(contato.getEmail());
+    }
+
+    private void validarCamposObrigatorios(Contato contato){
         if(contato == null)
             throw new ContatoPessoaObrigatorioException();
 
@@ -35,32 +45,21 @@ public abstract class ValidaContatoServiceImpl implements ValidaService<Contato>
             throw new EmailContatoObrigatorioException();
     }
 
-    void validarNome(String nome, Long idPessoa){
-        if(repository.findByNomeEqualsAndPessoa_IdEquals(nome, idPessoa) != null)
-            throw new NomeContatoJaExisteException();
-    }
-
-    void validarTelefone(String telefone, Long idPessoa){
+    private void validarTelefone(String telefone){
         if(telefone.length() < QTDE_MIN_DIGITOS_TELEFONE)
             throw new TelefoneContatoInvalidoException();
-        if(idPessoa == null) {
-            if (repository.findByTelefoneEquals(telefone) != null)
-                throw new TelefoneContatoJaExisteException("Telefone de contato já cadastrado para outra pessoa.");
-        }else {
-            if (repository.findByTelefoneEqualsAndPessoa_IdEquals(telefone, idPessoa) != null)
-                throw new TelefoneContatoJaExisteException();
-        }
+
+        List<Contato> contatos = repository.findByTelefoneEquals(telefone);
+        if (contatos != null && !contatos.isEmpty())
+            throw new TelefoneContatoJaExisteException(String.format("Telefone '%s' já está cadastrado para outra pessoa.", telefone));
     }
 
-    void validarEmail(String email, Long idPessoa){
+    private void validarEmail(String email){
         if(!email.contains("@"))
             throw new EmailContatoInvalidoException();
-        if(idPessoa == null) {
-            if (repository.findByEmailEquals(email) != null)
-                throw new EmailContatoJaExisteException("Email de contato já cadastrado para outra pessoa.");
-        }else{
-            if(repository.findByEmailEqualsAndPessoa_IdEquals(email, idPessoa) != null)
-                throw new EmailContatoJaExisteException();
-        }
+
+        List<Contato> contatos = repository.findByEmailEquals(email);
+        if (contatos != null && !contatos.isEmpty())
+            throw new EmailContatoJaExisteException(String.format("Email '%s' já está cadastrado para outra pessoa.", email));
     }
 }

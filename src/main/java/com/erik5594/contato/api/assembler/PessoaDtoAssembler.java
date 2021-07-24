@@ -45,7 +45,7 @@ public class PessoaDtoAssembler {
         pessoa.setCpf(pessoaDTO.cpf);
         pessoa.setDataNascimento(pessoaDTO.dataNascimento);
 
-        pessoa.setContatos(contatoDtoToEntity(pessoaDTO.contatos == null ? new ArrayList<>():pessoaDTO.contatos));
+        pessoa.setContatos(contatoDtoToEntity(pessoaDTO.contatos == null ? new ArrayList<>():pessoaDTO.contatos, pessoa));
 
         return pessoa;
     }
@@ -56,10 +56,13 @@ public class PessoaDtoAssembler {
                 .collect(Collectors.toList());
     }
 
-    private List<Contato> contatoDtoToEntity(List<ContatoDTO> contatosDTO){
+    private List<Contato> contatoDtoToEntity(List<ContatoDTO> contatosDTO, Pessoa pessoa){
         return contatosDTO.stream()
                 .map(contatoDtoAssembler::dtoToEntity)
-                .collect(Collectors.toList());
+                .map(contato -> {
+                    contato.setPessoa(pessoa);
+                    return contato;
+                }).collect(Collectors.toList());
     }
 
 }
